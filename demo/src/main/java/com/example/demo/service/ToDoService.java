@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.exception.ToDoNotFoundException;
 import com.example.demo.model.ToDo;
 import com.example.demo.repository.ToDoRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
@@ -33,8 +32,10 @@ public class ToDoService {
 
     //RETRIEVE ALL todo list
     public List<ToDo> getToDoList(){
-        return toDoRepo.findAll();
+        return toDoRepo.findAllByOrderById();
     }
+
+    public List<ToDo> getToDoListByStatus(boolean status){return toDoRepo.findAllByStatusOrderById(status);}
 
     //SELECTIVE todo UPDATE
     public ToDo updateToDo(long id, ToDo updatedToDo) throws ToDoNotFoundException{
@@ -68,7 +69,7 @@ public class ToDoService {
         // It returns type T or any of its subtype (T extends S) to ensure it returns the most specific type possible
         // (e.g., if you save a SpecialToDo, it returns a SpecialToDo). -- S is a special type or subtype ,
         //T is ToDo here and S is some special subtype of ToDo, since T is the main class that the repository is managing
-        //S is just "any class that extends the ToDo class"    <T,  ID>
+        //S is just "a-ny class that extends the ToDo class"    <T,  ID>
         //public interface ToDoRepository extends JpaRepository<ToDo, Long> {
     }
 
@@ -80,7 +81,7 @@ public class ToDoService {
             System.out.println("Delete Successful");
         }
         else{
-            throw new ToDoNotFoundException("ToDo with ID : " + id + "doesnt Exist!");
+            throw new ToDoNotFoundException("ToDo with ID : " + id + " doesnt Exist!");
         }
     }
 }

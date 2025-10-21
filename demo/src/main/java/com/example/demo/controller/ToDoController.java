@@ -4,15 +4,11 @@ import com.example.demo.exception.ToDoNotFoundException;
 import com.example.demo.model.ToDo;
 import com.example.demo.service.ToDoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @RestController
 public class ToDoController {
-
 
     private final ToDoService toDoService;
 
@@ -26,11 +22,23 @@ public class ToDoController {
         return toDoService.createToDo(toDo);//simple save method , saves this toDo into the record
     }
 //------------------------------------------------------------------------------------------------
+    /*By using @PathVariable in /todos/status/{status}, you're creating a rigid address that must have a status.
+    It can't handle /todos (no status) and it can't easily handle /todos/status/true/dueDate/2025-10-31 (this would be a different,
+    complicated endpoint).
+    Writing a new method for every possible filter combination (findByStatus, findByDueDate, findByStatusAndDueDate, etc.)
+    would be impossible to maintain.*/
     @GetMapping("/todos")
     public List<ToDo> getToDoList(){
         return toDoService.getToDoList();
     }
-//-------------------------------------------------------------------------------------------------
+
+//    @GetMapping("/todos/status/{status}")
+//    public List<ToDo> getToDoListByStatus(@PathVariable boolean status) { return toDoService.getToDoListByStatus(status);}
+
+    //Using "Specifications" is the standard spring solution
+    //
+
+// -------------------------------------------------------------------------------------------------
 
     @GetMapping("/todos/{id}")
     public ToDo getToDoById(@PathVariable long id) throws ToDoNotFoundException {
@@ -42,7 +50,7 @@ public class ToDoController {
     @DeleteMapping("/todos/{id}")
     public void removeToDo(@PathVariable long id) throws ToDoNotFoundException{
         //uppdated method implementation after db addition
-        //delete only if the item with that id exists
+        //delete only if t'he item with that id exists
         toDoService.removeToDo(id);
 
     }

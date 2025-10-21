@@ -28,7 +28,7 @@ public class ToDo {
     }
 
     //getters
-    public long getID() {
+    public long getId() {
         return id;
     }
 
@@ -49,7 +49,7 @@ public class ToDo {
     }
 
     //setters
-    public void setID(long ID) {
+    public void setId(long ID) {
         this.id = ID;
     }
 
@@ -65,8 +65,8 @@ public class ToDo {
         this.time = time;
     }
 
-    public void setStatus(boolean completed) {
-        status = completed;
+    public void setStatus(Boolean completed) {
+        this.status = completed;
     }
 
 }
