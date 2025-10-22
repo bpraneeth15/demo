@@ -21,10 +21,7 @@ This makes error handling much easier for you.*/
 @Repository
 public interface ToDoRepository extends JpaRepository<ToDo, Long>, JpaSpecificationExecutor<ToDo> {
 
-    //introducing a method to sort the records based on the id attribute, while fetching the list of todos
-     List<ToDo> findAllByOrderById();//db executes a query like this, []
-     List<ToDo> findAllByStatusOrderById(Boolean status);//
-
     //implementing Dynamic filtering
 
 }
+/*Before answering this question, I have a quick doubt to ask, so are you asking if the URL contains only status = true, like status field and its value then, it means the other fields and their values are not mentioned in the URL, if they are not mentioned in the URL, what would java do inorder to create a Data Transfer Object*/

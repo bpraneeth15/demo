@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.Specification.ToDoSpecification;
 import com.example.demo.exception.ToDoNotFoundException;
 import com.example.demo.model.ToDo;
 import com.example.demo.repository.ToDoRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import org.springframework.web.server.ResponseStatusException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,11 +32,22 @@ public class ToDoService {
     }
 
     //RETRIEVE ALL todo list
-    public List<ToDo> getToDoList(){
-        return toDoRepo.findAllByOrderById();
+    public List<ToDo> getToDoList(Boolean status, String dueDate, String taskDesc){
+
+        //we assign the returned specification instance to the spec variable
+        Specification<ToDo> spec = ToDoSpecification.findByCriteria(status, dueDate, taskDesc);
+        //findByCriteria method returns the Specification instance
+        //“Give me a Specification object that knows how to filter ToDos based on these three possible parameters.”
+
+        //now using this specification instance spec we tell JPA to start constructing the query
+       // List<ToDo> toDoList = toDoRepo.findAll(spec); //this findAll(Specification<ToDo>) method is from the JPASpecificationExecutor
+        //this returns the list of ToDo objects because we will be using the specification<ToDo>
+        //we are basically telling the JPA -> “Give me all ToDo records that satisfy the conditions described by this Specification.”
+        return toDoRepo.findAll(spec);//this list is a list of todo objects after fitering
+        // return toDoRepo.findAllByOrderById(status, dueDate, taskDesc);
     }
 
-    public List<ToDo> getToDoListByStatus(boolean status){return toDoRepo.findAllByStatusOrderById(status);}
+    //public List<ToDo> getToDoListByStatus(boolean status){return toDoRepo.findAllByStatusOrderById(status);}
 
     //SELECTIVE todo UPDATE
     public ToDo updateToDo(long id, ToDo updatedToDo) throws ToDoNotFoundException{
@@ -86,7 +98,9 @@ public class ToDoService {
     }
 }
 
-    //delete or remove existing todo
-/*The @PathVariable annotation is used to extract values from the URI (URL) template.
-Role: It tells Spring to take the value found in the path variable placeholder in the URL
-and inject it into the method parameter*/
+/*When you create or pass a Specification, you’re not executing anything — you’re just handing Spring Data JPA a plan (a blueprint) of what conditions should exist in the query.*/
+/*findAll(spec) calls your toPredicate(...) method of the passed spec internally,
+Builds those predicates (the actual filtering conditions),
+Merges them into a CriteriaQuery,
+Converts that to SQL, and
+Executes it against the database.*/

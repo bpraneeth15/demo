@@ -28,45 +28,41 @@ public class ToDoController {
     Writing a new method for every possible filter combination (findByStatus, findByDueDate, findByStatusAndDueDate, etc.)
     would be impossible to maintain.*/
     @GetMapping("/todos")
-    public List<ToDo> getToDoList(){
-        return toDoService.getToDoList();
+    public List<ToDo> getToDoList(@RequestParam(required = false) Boolean status,
+                                  @RequestParam(required = false) String dueDate,
+                                  @RequestParam(required = false) String taskDesc){
+        return toDoService.getToDoList(status, dueDate, taskDesc);
     }
-
-//    @GetMapping("/todos/status/{status}")
-//    public List<ToDo> getToDoListByStatus(@PathVariable boolean status) { return toDoService.getToDoListByStatus(status);}
-
-    //Using "Specifications" is the standard spring solution
-    //
 
 // -------------------------------------------------------------------------------------------------
 
     @GetMapping("/todos/{id}")
     public ToDo getToDoById(@PathVariable long id) throws ToDoNotFoundException {
-
         return toDoService.getToDo(id);
     }
 //--------------------------------------------------------------------------------------------------------------------------->>
 
     @DeleteMapping("/todos/{id}")
     public void removeToDo(@PathVariable long id) throws ToDoNotFoundException{
-        //uppdated method implementation after db addition
-        //delete only if t'he item with that id exists
+        //updated method implementation after db addition
+        //delete only if the item with that id exists
         toDoService.removeToDo(id);
-
     }
+
 //----------------------------------------------------------------------------------------------------------------------------------->>
     @PatchMapping ("/todos/{id}")
     public ToDo updateToDo(@PathVariable long id, @RequestBody ToDo updatedToDo) throws ToDoNotFoundException {
-
         return toDoService.updateToDo(id, updatedToDo);
     }
 
-    @ExceptionHandler(ToDoNotFoundException.class) //tells spring -> when you see a specifuc exceotion, run this method instead of crashing.
+    @ExceptionHandler(ToDoNotFoundException.class) //tells spring -> when you see a specific execution, run this method instead of crashing.
     @ResponseStatus(HttpStatus.NOT_FOUND) //sets the correct http error code
     public String handleTheToDoNotFound(ToDoNotFoundException e){
        return e.getMessage();
     }
 }
+
+
 /*The @PathVariable annotation is used to extract values from the URI (URL) template.
 Role: It tells Spring to take the value found in the path variable placeholder in the URL
 and inject it into the method parameter.
