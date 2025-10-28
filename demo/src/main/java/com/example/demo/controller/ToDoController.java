@@ -22,11 +22,6 @@ public class ToDoController {
         return toDoService.createToDo(toDo);//simple save method , saves this toDo into the record
     }
 //------------------------------------------------------------------------------------------------
-    /*By using @PathVariable in /todos/status/{status}, you're creating a rigid address that must have a status.
-    It can't handle /todos (no status) and it can't easily handle /todos/status/true/dueDate/2025-10-31 (this would be a different,
-    complicated endpoint).
-    Writing a new method for every possible filter combination (findByStatus, findByDueDate, findByStatusAndDueDate, etc.)
-    would be impossible to maintain.*/
     @GetMapping("/todos")
     public List<ToDo> getToDoList(@RequestParam(required = false) Boolean status,
                                   @RequestParam(required = false) String dueDate,
@@ -36,10 +31,10 @@ public class ToDoController {
 
 // -------------------------------------------------------------------------------------------------
 
-    @GetMapping("/todos/{id}")
-    public ToDo getToDoById(@PathVariable long id) throws ToDoNotFoundException {
-        return toDoService.getToDo(id);
-    }
+//    @GetMapping("/todos/{id}")
+//    public ToDo getToDoById(@PathVariable long id) throws ToDoNotFoundException {
+//        return toDoService.getToDo(id);
+//    }
 //--------------------------------------------------------------------------------------------------------------------------->>
 
     @DeleteMapping("/todos/{id}")
@@ -61,11 +56,3 @@ public class ToDoController {
        return e.getMessage();
     }
 }
-
-
-/*The @PathVariable annotation is used to extract values from the URI (URL) template.
-Role: It tells Spring to take the value found in the path variable placeholder in the URL
-and inject it into the method parameter.
-In Your Code: When a client sends a request to /todos/5, the value 5 is pulled from the path and
-assigned to the method parameter long id.
-The name of the parameter (id) matches the name in the URL pattern ({id}).*/
